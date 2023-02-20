@@ -1,0 +1,54 @@
+Java "Records" are a new way to define classes in Java that are especially
+good for "plain" objects that serve as aggregate collections of data, and
+nothing more than that.  They are good for classes that contain data that
+are not meant to be altered, and have only the most fundamental methods,
+like constructors and getters.  For anything more sophisticated, it is better
+to create a class from scratch.
+
+By using the "record" keyword, rather than "class," Java will automatically
+generate a constructor, getters (but not setters), and a toString() method.
+Java will also create an equals() method, so you can compare your records for
+equality, and a hashCode() method, so you can store your records as keys
+in HashMaps or HashSets.
+
+Example: for the Location record, which looks like this:
+
+record Location(long id, double latitude, double longitude) {
+}
+
+Java basically generates the following code behind the scenes:
+
+public class Location {
+   private long id;
+   private double latitude;
+   private double longitude;
+
+   public Location(long id, double latitude, double longitude) {
+      this.id = id;
+      this.latitude = latitude;
+      this.longitude = longitude;
+   }
+
+   public long id() { // getter for id
+      return id;
+   }
+
+   // Similar getters for latitude, longitude
+
+   public String toString() {
+      return "A nicely-formatted string with details of id, latitude, and longitude";
+   }
+
+   // equals and hashCode would be here...
+}
+
+Basically it saves you from having to write all that boilerplate code.
+
+So Location, for instance, is a perfect example of a situation where a 
+Record is appropriate, because a Location just has its three instance variables,
+and doesn't really need to *do* anything else.  Road is the same way. However,
+the RoadNetwork class should almost certainly *not* be a Record, because it is
+a more sophisticated class that represents a graph that will grow as the text
+file is being read.  So it needs extra methods, and its two instance variables
+(roads and locations) can't be set in its constructor anyway, so it really
+shouldn't be a Record.
